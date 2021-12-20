@@ -73,22 +73,7 @@ globals:
     type: bool
     initial_value: 'false'
 
-font:
-  - file: "fonts/Arial.ttf"
-    id: arial
-    size: 15
-  - file: "fonts/Arial.ttf"
-    id: arial30
-    size: 30
-  - file: "fonts/Arial.ttf"
-    id: arial10
-    size: 10
-
 uart:
-  - rx_pin: GPIO1
-    baud_rate: 9600
-    id: pms
-  
   - rx_pin: GPIO18
     tx_pin: GPIO19
     baud_rate: 9600
@@ -126,69 +111,6 @@ sensor:
       co2:
         name: "CO2"
         id: co2
-        on_value:
-          - if:
-              condition:
-                sensor.in_range:
-                  id: co2
-                  below: 700
-              then: 
-                - light.control:
-                    id: led3
-                    red: 0
-                    green: 1
-                    blue: 0
-          - if:
-              condition:
-                sensor.in_range:
-                  id: co2
-                  above: 700
-                  below: 1000
-              then: 
-                - light.control:
-                    id: led3
-                    red: 0
-                    green: 1
-                    blue: 1
-          - if:
-              condition:
-                sensor.in_range:
-                  id: co2
-                  above: 1000
-                  below: 1500
-              then: 
-                - light.control:
-                    id: led3
-                    red: 1
-                    green: 1
-                    blue: 0
-          - if:
-              condition:
-                sensor.in_range:
-                  id: co2
-                  above: 1500
-                  below: 2100
-              then: 
-                - light.control:
-                    id: led3
-                    red: 1
-                    green: 0
-                    blue: 1
-          - if:
-              condition:
-                sensor.in_range:
-                  id: co2
-                  above: 2100
-              then: 
-                - light.control:
-                    id: led3
-                    red: 1
-                    green: 0
-                    blue: 0
-          - lambda: |-
-              if(id(co2).state > id(co_max)) { id(co_max) = id(co2).state; }
-              if(id(co2).state < id(co_min)) { id(co_min) = id(co2).state; }
-
       temperature:
         name: "MH-Z19 Temperature"
       update_interval: 10s
@@ -200,20 +122,6 @@ sensor:
       name: "Ambient Light"
       update_interval: 3s
       id: light_sens
-      on_value:
-        then:
-          - light.control:
-              id: led1
-              brightness: !include includes/brightness.yaml
-          - light.control:
-              id: led2
-              brightness: !include includes/brightness.yaml
-          - light.control:
-              id: led3
-              brightness: !include includes/brightness.yaml
-          - lambda: |-
-              if (id(light_sens).state < 2 && !id(night_mode)) { id(display_on) = false; }
-              else { id(display_on) = true; }
       
     - platform: sgp30
       eco2:
